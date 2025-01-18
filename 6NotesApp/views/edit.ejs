@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div class="bg-gray-600 h-screen ">
+
+        <div class="task flex flex-col p-2 w-72 rounded border-solid border-2 border-white h-72 bg-gray-500">
+            <div class="taskhead text-3xl font-bold">
+            </div>
+            <form action="/edit" method="post">
+                <input type="text" name="old" id="" readonly value=<%=filename %>>
+                <input type="text" name="new" id="" placeholder="Enter new name">
+                <input type="submit" value="update">
+                
+            </form>
+
+            <a href="/" class="text-blue-700 ">go back....</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

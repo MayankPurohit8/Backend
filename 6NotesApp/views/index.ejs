@@ -17,10 +17,12 @@
             <%if(files.length>0){%>
 
             <% files.forEach(function(val){%>
-                <div class="task flex flex-col p-2 w-72 rounded border-solid border-2 border-white h-72 bg-gray-500">
+                <div class="task flex flex-col p-2 w-72 rounded border-solid border-2 border-white  bg-gray-500">
                     <div class="taskhead text-3xl font-bold"><%= val %></div>
-                    <div class="taskbody text-xl ">body</div>
-                    <a href="/file/<%=val%>" class="text-blue-700 ">View More</a>
+                    <div class="flex justify-between">
+                    <a href="/file/<%=val%>" class="text-blue-500 ">View More</a>
+                    <a href="/edit/<%=val%>" class="text-blue-500">Edit</a>
+                    </div>
                 </div>
             <%})%>
             <%} else{%>
