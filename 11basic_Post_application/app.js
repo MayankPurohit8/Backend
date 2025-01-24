@@ -58,14 +58,14 @@ app.post("/login", async function (req, res) {
     if (result) {
       let token = jwt.sign({ email, userId: user.__id }, "shh");
       res.cookie("token", token);
-      res.status(200).send("/profile");
+      res.status(200).redirect("/profile");
     } else res.redirect("/login");
   });
 });
 
 app.get("/logout", isLoggedin, function (req, res) {
   res.cookie("token", "");
-  res.send("/login ");
+  res.render("login");
 });
 
 function isLoggedin(req, res, next) {
@@ -96,6 +96,49 @@ app.post("/post", isLoggedin, async function (req, res) {
   user.posts.push(newPost._id);
   await user.save();
   res.redirect("/profile");
+});
+
+app.get("/like/:id", isLoggedin, async function (req, res) {
+  let user = await userModel.findOne({ email: req.user.email });
+  let post = await postModel.findOne({ _id: req.params.id }).populate("user");
+
+  if (await post.likes.includes(user._id)) {
+    let i = post.likes.indexOf(user.Id);
+    post.likes.splice(i, 1);
+  } else {
+    post.likes.push(user._id);
+  }
+  await post.save();
+  res.redirect("/posts");
+});
+
+app.get("/edit/:id", isLoggedin, async function (req, res) {
+  let user = await userModel.findOne({ email: req.user.email });
+  let post = await postModel.findOne({ _id: req.params.id });
+  res.render("edit", { user: user, post: post });
+});
+
+app.post("/edit/:id", isLoggedin, async function (req, res) {
+  await postModel.findOneAndUpdate(
+    { _id: req.params.id },
+    { content: req.body.content }
+  );
+
+  res.redirect("/profile");
+});
+
+app.get("/edit/:id", isLoggedin, async function (req, res) {
+  let user = await userModel.findOne({ email: req.user.email });
+  let post = await postModel.findOne({ _id: req.params.id });
+  res.render("edit", { user: user, post: post });
+});
+
+app.get("/posts", isLoggedin, async function (req, res) {
+  let user = await userModel.findOne({ email: req.user.email });
+  let allusers = await userModel.find();
+  let allposts = await postModel.find().populate("user");
+
+  res.render("posts", { user: user, allposts: allposts, allusers: allusers });
 });
 
 app.listen(3000);
